@@ -1,7 +1,16 @@
 import {getProviders, signIn, useSession} from "next-auth/react";
+import { useRouter } from "next/router";
 export default function login({providers}){
     const {data,status}=useSession();
-    console.log(data,status);
+    const router=useRouter();
+    if(status==="loading")
+    {
+        return " ";
+    }
+    else if(status==="authenticated")
+    {
+        router.push("/")
+    }
     return <div 
     style={{display:"flex" 
     , alignItems:"center"

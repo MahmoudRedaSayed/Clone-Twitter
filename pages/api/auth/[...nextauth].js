@@ -12,4 +12,15 @@ export default NextAuth({
     }),
     // ...add more providers here
   ],
+  pages:{
+    signIn:"/login"
+  },
+  session:{
+    strategy:"Bearer"
+  }
+  ,callbacks:{
+    async session({ session, token }) {
+      return session
+    },
+  }
 })
