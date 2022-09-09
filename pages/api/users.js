@@ -20,7 +20,6 @@ export default async function handleUser(req,res)
         {
             console.log(user)
             res.json(user);
-    
         }
         else
             res.status(400).json("not found");
