@@ -44,16 +44,21 @@ export default function EditableImage({type,src,onChange,className,editable=fals
         setIsFileOver(false);
       }}
     >
-      <div className={"bg-twitterBorder text-white relative"}>
-        <div className={'absolute inset-0 '+extraClasses}></div>
+      <div style={{backgroundColor:"#2f3336",color:"#fff",position:"relative"}}>
+        <div className={'absolute inset-0 '+extraClasses} style={{position:"absolute"}}></div>
         {isUploading && (
-          <div className="absolute inset-0 flex items-center justify-center"
-               style={{backgroundColor:'rgba(48, 140, 216,0.9)'}}>
+          <div 
+               style={{backgroundColor:'rgba(48, 140, 216,0.9)',
+               position:"absolute",
+               display:"flex",
+               alignItems:'center',
+               justifyContent:"center"}}>
             <PulseLoader size={14} color={'#fff'} />
           </div>
         )}
-        <div className={"cover flex items-center overflow-hidden "+className}>
-          {src && (<img src={src} className="w-full" alt=""/>)}
+        <div className={"cover flex items-center overflow-hidden "+className}
+        style={{contain:"cover",display:"flex",alignItems:"center",overflow:"hidden"}}>
+          {src && (<img src={src} className="w-full" style={{width:"100%"}} alt=""/>)}
         </div>
       </div>
     </FileDrop>
