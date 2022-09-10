@@ -8,6 +8,10 @@ export default async function handlePost(req,res)
 {
     await initMongoose();
     const session=await unstable_getServerSession(req,res,authOptions);
+    if(req.method==="GET")
+    {
+        res.json(await Post.find({}).populate("author").sort({createdAt:-1}));
+    }
     if(req.method==='POST')
     {
         const {text,id}=req.body;

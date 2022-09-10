@@ -2,7 +2,7 @@ import useUserInfo from "../hooks/useUserInfo";
 import {useState} from "react";
 import axios from "axios";
 
-export default function PostForm({placeholder='What\'s happening?'}) {
+export default function PostForm({placeholder='What\'s happening?',onPost}) {
   const {userInfo,status} = useUserInfo();
   const [text,setText] = useState('');
   const [images,setImages] = useState([]);
@@ -11,6 +11,10 @@ export default function PostForm({placeholder='What\'s happening?'}) {
     e.preventDefault();
     await axios.post('/api/posts', {text,id:userInfo._id});
     setText('');
+    if(onPost)
+    {
+      onPost();
+    }
   }
 
   if (status === 'loading') {
