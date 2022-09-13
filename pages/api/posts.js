@@ -10,7 +10,21 @@ export default async function handlePost(req,res)
     const session=await unstable_getServerSession(req,res,authOptions);
     if(req.method==="GET")
     {
-        res.json(await Post.find({}).populate("author").sort({createdAt:-1}));
+
+        const {id} = req.query;
+    if (id) {
+      const post = await Post.findById(id)
+        .populate('author')
+        .populate({
+          path: 'parent',
+          populate: 'author',
+        });
+      res.json({post});
+    }
+      else
+      {
+          res.json(await Post.find({}).populate("author").sort({createdAt:-1}));
+      }
     }
     if(req.method==='POST')
     {

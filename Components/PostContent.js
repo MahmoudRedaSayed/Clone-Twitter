@@ -47,7 +47,7 @@ function PostContent({
             </Link>
             {createdAt && !big && (
               <span style={{paddingLeft:"10px",cursor:"pointer",color:"#71767b"}}>
-              {/* <ReactTimeAgo date={createdAt} timeStyle={'twitter'} /> */}
+              <ReactTimeAgo date={createdAt} timeStyle={'twitter'} />
             </span>
             )}
           </div>
