@@ -1,4 +1,4 @@
-import { useSession } from "next-auth/react"
+import { useSession,signOut } from "next-auth/react"
 import { useEffect, useState } from "react";
 import UserName from "../Components/userName";
 import useUserInfo from "../hooks/useUserInfo";
@@ -36,7 +36,7 @@ export default function Home() {
   }
   else
   {
-    if(!userInfo?.username)
+    if(userInfo&&!(userInfo.username))
     {
       return <UserName email={userInfo?.email}></UserName>
     }
@@ -44,12 +44,17 @@ export default function Home() {
   return (
     <div className="max-w-lg  border-l border-r min-h-screen" style={{borderWidth:"1px",borderColor:"#2f3336",borderStyle:"solid",margin:"0 20% 0 20%",borderTop:"none"}}>
         <h1 className="text-lg font-bold p-4">Home</h1>
-        <PostForm onPost={()=>{fetchPosts();}} />
+      {session&&<PostForm onPost={()=>{fetchPosts();}} />}
         {posts.length > 0 && posts.map(post => (
           <div className="border-twitterBorder p-5" style={{borderTop:"solid 1px #2f3336"}} key={post._id}>
             <PostContent {...post} likedByMe={idsLikedByMe.includes(post._id)}></PostContent>
             </div>
           ))}
+          {userInfo && (
+        <div className="p-5 text-center border-t border-twitterBorder" style={{padding:"5px",textAlgin:"center",borderTop:"1px solid #2f3336 "}}>
+          <button onClick={logout} className="bg-twitterWhite text-black px-5 py-2 rounded-full">Logout</button>
+        </div>
+      )}
     </div>
   )
 }

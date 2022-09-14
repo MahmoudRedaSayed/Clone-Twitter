@@ -26,7 +26,6 @@ export default async function handlePost(req,res)
       {
         const posts =await Post.find({}).populate("author").sort({createdAt:-1});
           let postsLikedByMe = [];
-          console.log(session.user.id)
           if (session) {
             postsLikedByMe = await Like.find({
               author:session.user.id,
