@@ -5,28 +5,40 @@ import useUserInfo from "../hooks/useUserInfo";
 import PostForm from "../Components/postForm";
 import axios from "axios";
 import PostContent from "../Components/PostContent";
+import { useRouter } from "next/router";
 
 
 export default function Home() {
-  const {userInfo,setUserInfo,infoStatus}=useUserInfo();
-  const [posts,setPosts]=useState([]);
-  async function fetchPosts(){
-    await axios.get("/api/posts").then(response=>{
-      setPosts(response.data);
+  const {data:session} = useSession();
+  const {userInfo,setUserInfo,status:userInfoStatus} = useUserInfo();
+  const [posts,setPosts] = useState([]);
+  const [idsLikedByMe,setIdsLikedByMe] = useState([]);
+  const router = useRouter();
+
+  function fetchPosts() {
+    axios.get('/api/posts').then(response => {
+      setPosts(response.data.posts);
+      setIdsLikedByMe(response.data.idsLikedByMe);
     });
   }
-  useEffect(()=>{
+
+  async function logout() {
+    setUserInfo(null);
+    await signOut();
+  }
+
+  useEffect(() => {
     fetchPosts();
-  })
-  if(!infoStatus)
+  }, []);
+  if(userInfoStatus)
   {
     return "loading info of the user "
   }
   else
   {
-    if(!userInfo.username)
+    if(!userInfo?.username)
     {
-      return <UserName email={userInfo.email}></UserName>
+      return <UserName email={userInfo?.email}></UserName>
     }
   }
   return (
@@ -35,7 +47,7 @@ export default function Home() {
         <PostForm onPost={()=>{fetchPosts();}} />
         {posts.length > 0 && posts.map(post => (
           <div className="border-twitterBorder p-5" style={{borderTop:"solid 1px #2f3336"}} key={post._id}>
-            <PostContent {...post}></PostContent>
+            <PostContent {...post} likedByMe={idsLikedByMe.includes(post._id)}></PostContent>
             </div>
           ))}
     </div>

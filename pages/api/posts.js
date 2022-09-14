@@ -3,6 +3,7 @@ import {unstable_getServerSession} from "next-auth"
 import { authOptions } from "./auth/[...nextauth]";
 import { initMongoose } from "../../lib/mongoose";
 import axios from "axios";
+import Like from "../../models/Like"
 
 export default async function handlePost(req,res)
 {
@@ -23,8 +24,22 @@ export default async function handlePost(req,res)
     }
       else
       {
-          res.json(await Post.find({}).populate("author").sort({createdAt:-1}));
-      }
+        const posts =await Post.find({}).populate("author").sort({createdAt:-1});
+          let postsLikedByMe = [];
+          console.log(session.user.id)
+          if (session) {
+            postsLikedByMe = await Like.find({
+              author:session.user.id,
+              post:posts.map(p => p._id),
+            });
+          }
+          let idsLikedByMe = postsLikedByMe.map(like => like.post);
+          res.json({
+            posts,
+            idsLikedByMe,
+          });
+        }
+      
     }
     if(req.method==='POST')
     {
