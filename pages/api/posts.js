@@ -25,7 +25,15 @@ export default async function handlePost(req,res)
       else
       {
         const parent=req.query.parent||null
-        const posts =await Post.find({parent}).populate("author").sort({createdAt:-1});
+        const author=req.query.author;
+        let searchFilter;
+        if (author) {
+          searchFilter = {author};
+        }
+        if (parent) {
+          searchFilter = {parent};
+        }
+        const posts =await Post.find(searchFilter).populate("author").sort({createdAt:-1});
           let postsLikedByMe = [];
           if (session) {
             postsLikedByMe = await Like.find({

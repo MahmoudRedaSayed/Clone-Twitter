@@ -14,8 +14,10 @@ export default async function handleUser(req,res)
     }
     else if(req.method==="GET")
     {
-        const id=req.query.id;
-        const user=await User.findOne({email:id});
+        const {id,username} = req.query;
+        const user = id
+          ?await User.findOne({email:id})
+          : await User.findOne({username});
         if(user)
         {
             console.log(user)

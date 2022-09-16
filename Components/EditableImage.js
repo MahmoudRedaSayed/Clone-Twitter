@@ -2,7 +2,7 @@ import {useState} from "react";
 import {FileDrop} from "react-file-drop";
 import {PulseLoader} from "react-spinners";
 
-export default function EditableImage({type,src,onChange,className,editable=false}) {
+export default function EditableImage({type,src,onChange,className,editable=false,width}) {
   const [isFileNearby, setIsFileNearby] = useState(false);
   const [isFileOver,setIsFileOver] = useState(false);
   const [isUploading,setIsUploading] = useState(false);
@@ -50,15 +50,17 @@ export default function EditableImage({type,src,onChange,className,editable=fals
           <div 
                style={{backgroundColor:'rgba(48, 140, 216,0.9)',
                position:"absolute",
+               top:"50%",
+               left:"50%",
                display:"flex",
                alignItems:'center',
                justifyContent:"center"}}>
             <PulseLoader size={14} color={'#fff'} />
           </div>
         )}
-        <div className={"cover flex items-center overflow-hidden "+className}
-        style={{contain:"cover",display:"flex",alignItems:"center",overflow:"hidden"}}>
-          {src && (<img src={src} className="w-full" style={{width:"100%"}} alt=""/>)}
+        <div 
+        style={{contain:"cover" ,width:"100%",display:"flex",alignItems:"center",overflow:"hidden",height:className}}>
+          {src && (<img src={src} className="w-full" style={{width:width}} alt=""/>)}
         </div>
       </div>
     </FileDrop>
