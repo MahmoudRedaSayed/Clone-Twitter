@@ -52,7 +52,7 @@ export default function UserPage() {
   async function updateProfile() {
     const {bio,name,username} = profileInfo;
     await axios.put('/api/profile', {
-      bio,name,username
+      bio,name,username,id:profileInfo._id
     });
     setEditMode(false);
   }
