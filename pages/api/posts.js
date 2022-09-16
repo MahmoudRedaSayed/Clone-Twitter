@@ -12,19 +12,20 @@ export default async function handlePost(req,res)
     if(req.method==="GET")
     {
 
-        const {id} = req.query;
+    const {id} = req.query;
     if (id) {
       const post = await Post.findById(id)
-        .populate('author')
-        .populate({
-          path: 'parent',
-          populate: 'author',
-        });
+      .populate('author')
+      .populate({
+        path: 'parent',
+        populate: 'author',
+      });
       res.json({post});
     }
       else
       {
-        const posts =await Post.find({}).populate("author").sort({createdAt:-1});
+        const parent=req.query.parent||null
+        const posts =await Post.find({parent}).populate("author").sort({createdAt:-1});
           let postsLikedByMe = [];
           if (session) {
             postsLikedByMe = await Like.find({
@@ -42,12 +43,18 @@ export default async function handlePost(req,res)
     }
     if(req.method==='POST')
     {
-        const {text,id}=req.body;
+        const {text,id,parent}=req.body;
         
         const post=await Post.create({
             text,
+            parent,
             author:id
         });
+        if (parent) {
+          const parentPost = await Post.findById(parent);
+          parentPost.commentsCount = await Post.countDocuments({parent});
+          await parentPost.save();
+        }
         res.json(post);
     }
 }

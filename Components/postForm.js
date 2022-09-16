@@ -2,17 +2,17 @@ import useUserInfo from "../hooks/useUserInfo";
 import {useState} from "react";
 import axios from "axios";
 
-export default function PostForm({placeholder='What\'s happening?',onPost}) {
+export default function PostForm({compact,parent,placeholder='What\'s happening?',onPost}) {
   const {userInfo,status} = useUserInfo();
   const [text,setText] = useState('');
   const [images,setImages] = useState([]);
 
   async function handlePostSubmit(e) {
     e.preventDefault();
-    await axios.post('/api/posts', {text,id:userInfo._id});
+    await axios.post('/api/posts', {text,parent,images});
     setText('');
-    if(onPost)
-    {
+    setImages([]);
+    if(onPost) {
       onPost();
     }
   }
@@ -34,9 +34,14 @@ export default function PostForm({placeholder='What\'s happening?',onPost}) {
                         onChange={e => setText(e.target.value)}
                         placeholder={placeholder} />
 
-        <div className="text-right border-t border-twitterBorder p-2"style={{display:"flex",flexDirection:"row-reverse"}}>
-            <button className=" text-white px-5 py-1 rounded-full" style={{backgroundColor:"#308CD8",borderRadius:"50px"}}>Tweet</button>
+      {!compact && (<div className="text-right border-t border-twitterBorder p-2"style={{display:"flex",flexDirection:"row-reverse"}}>
+                  <button className=" text-white px-5 py-1 rounded-full" style={{backgroundColor:"#308CD8",borderRadius:"50px"}}>Tweet replay2 </button>
+              </div>)}
+        {compact && (
+          <div className="pl-2" style={{display:"flex",flexDirection:"row-reverse"}}>
+            <button className=" text-white px-5 py-1 rounded-full"  style={{backgroundColor:"#308CD8",borderRadius:"50px"}}>Tweet replay </button>
           </div>
+        )}
         </div>
         </div>
      </form>

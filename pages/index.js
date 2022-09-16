@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 
 export default function Home() {
   const {data:session} = useSession();
-  const {userInfo,setUserInfo,status:userInfoStatus} = useUserInfo();
+  const {userInfo,setUserInfo,infoStatus:userInfoStatus} = useUserInfo();
   const [posts,setPosts] = useState([]);
   const [idsLikedByMe,setIdsLikedByMe] = useState([]);
   const router = useRouter();
@@ -30,7 +30,7 @@ export default function Home() {
   useEffect(() => {
     fetchPosts();
   }, []);
-  if(userInfoStatus)
+  if(!userInfoStatus)
   {
     return "loading info of the user "
   }
@@ -47,6 +47,14 @@ export default function Home() {
       {session&&<PostForm onPost={()=>{fetchPosts();}} />}
         {posts.length > 0 && posts.map(post => (
           <div className="border-twitterBorder p-5" style={{borderTop:"solid 1px #2f3336"}} key={post._id}>
+             {post.parent && (
+              <div>
+                <PostContent {...post.parent} />
+                <div className="relative h-8">
+                  <div className="border-l-2 border-twitterBorder h-10 absolute ml-6 -top-4"></div>
+                </div>
+              </div>
+            )}
             <PostContent {...post} likedByMe={idsLikedByMe.includes(post._id)}></PostContent>
             </div>
           ))}

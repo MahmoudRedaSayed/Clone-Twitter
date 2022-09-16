@@ -1,11 +1,13 @@
 import {useEffect,useState} from "react";
 import {useSession} from "next-auth/react";
+import {useRouter} from "next/router"
 
 export default function useUserInfo() {
 
     const {data:session,status}=useSession();
     const [userInfo,setUserInfo]=useState();
     const [infoStatus,setInfoStatus]=useState(false);
+    const router=useRouter()
     async function getUserInfo(){
       if(status==="loading")
         return ;
@@ -19,8 +21,12 @@ export default function useUserInfo() {
                 })
             })
         }
+        else{
+          router.push("/login")
+        }
     }
     useEffect(()=>{
+      console.log("ahhhh")
       getUserInfo();
     },[status])
 

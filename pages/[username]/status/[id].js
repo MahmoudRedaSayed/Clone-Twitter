@@ -21,11 +21,11 @@ export default function postPage() {
       .then(response => {
         setPost(response.data.post);
       });
-    // axios.get('/api/posts?parent='+id)
-    //   .then(response => {
-    //     setReplies(response.data.posts);
-    //     setRepliesLikedByMe(response.data.idsLikedByMe);
-    //   })
+    axios.get('/api/posts?parent='+id)
+      .then(response => {
+        setReplies(response.data.posts);
+        setRepliesLikedByMe(response.data.idsLikedByMe);
+      })
   }
 
   useEffect(() => {
