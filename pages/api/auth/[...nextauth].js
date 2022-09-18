@@ -1,6 +1,6 @@
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
-import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
+import {MongoDBAdapter} from "@next-auth/mongodb-adapter";
 import clientPromise from "../../../lib/mongodb"
 export const authOptions = {
   adapter: MongoDBAdapter(clientPromise),
@@ -16,10 +16,16 @@ pages:{
   signIn:"/login"
 },
 session:{
-  strategy:"Bearer"
+  strategy: 'jwt',
 }
 ,callbacks:{
-  async session({ session, token }) {
+ 
+  async session({token,session}) {
+    console.log("token",token)
+    console.log("session",session)
+    if (session?.user && token?.sub) {
+      session.user.id = token.sub;
+    }
     return session
   },
 }

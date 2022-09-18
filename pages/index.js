@@ -6,17 +6,19 @@ import PostForm from "../Components/postForm";
 import axios from "axios";
 import PostContent from "../Components/PostContent";
 import { useRouter } from "next/router";
+import { data } from "autoprefixer";
+import ClipLoader from "react-spinners/ClipLoader";
 
 
 export default function Home() {
   const {data:session} = useSession();
-  const {userInfo,setUserInfo,infoStatus:userInfoStatus} = useUserInfo();
+  const {userInfo,setUserInfo,infoStatus:userInfoStatus,uid} = useUserInfo();
   const [posts,setPosts] = useState([]);
   const [idsLikedByMe,setIdsLikedByMe] = useState([]);
   const router = useRouter();
 
   function fetchPosts() {
-    axios.get('/api/posts').then(response => {
+    axios.get('/api/posts?email='+session?.user.email).then(response => {
       setPosts(response.data.posts);
       setIdsLikedByMe(response.data.idsLikedByMe);
     });
@@ -28,11 +30,12 @@ export default function Home() {
   }
 
   useEffect(() => {
+    console.log(session)
     fetchPosts();
   }, []);
   if(!userInfoStatus)
   {
-    return "loading info of the user "
+    return <ClipLoader color={"red"} loading={userInfoStatus} size={150}/>
   }
   else
   {
@@ -50,9 +53,10 @@ export default function Home() {
              {post.parent && (
               <div>
                 <PostContent {...post.parent} />
-                <div className="relative h-8">
-                  <div className="border-l-2 border-twitterBorder h-10 absolute ml-6 -top-4"></div>
-                </div>
+                <div className="ml-5 h-12 relative" style={{position:"relative",height:"50px",marginLeft:"10px"}}>
+                <div className="h-20 border-l-2 border-twitterBorder absolute -top-5"
+                     style={{marginLeft:'2px',height:"60px",borderLeft:"2px solid #2f3336 " ,position:"absolute",top:"-5px"}}></div>
+              </div>
               </div>
             )}
             <PostContent {...post} likedByMe={idsLikedByMe.includes(post._id)}></PostContent>

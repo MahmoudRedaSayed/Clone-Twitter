@@ -6,7 +6,7 @@ import User from "../../models/User";
 export default async function handler(req, res) {
   await initMongoose();
   const session = await unstable_getServerSession(req, res, authOptions);
-  const {bio,name,username,id} = req.body;
-  await User.findByIdAndUpdate(id, {bio,name,username});
+  const {bio,name,username} = req.body;
+  await User.findByIdAndUpdate(session.user.id, {bio,name,username});
   res.json('ok');
 }

@@ -1,14 +1,19 @@
 import useUserInfo from "../hooks/useUserInfo";
 import {useState} from "react";
 import axios from "axios";
+import { useSession } from "next-auth/react";
+import { data } from "autoprefixer";
+
 
 export default function PostForm({compact,parent,placeholder='What\'s happening?',onPost}) {
+  const {data:session}=useSession();
   const {userInfo,status} = useUserInfo();
   const [text,setText] = useState('');
   const [images,setImages] = useState([]);
 
   async function handlePostSubmit(e) {
     e.preventDefault();
+    console.log(session)
     await axios.post('/api/posts', {text,parent,images});
     setText('');
     setImages([]);
@@ -26,7 +31,7 @@ export default function PostForm({compact,parent,placeholder='What\'s happening?
         <div className="flex" style={{gap:"10px"}}>
         <div className="p-2" style={{display:"flex",flexDirection:"row",alignItems:"center",gap:"10px"}}>
           <img style={{borderRadius:"50%"}} src={userInfo?.image} alt="avtar" />
-          <p>{userInfo?.username}</p>
+          <p>{userInfo?.name}</p>
         </div>
         <div  className="grow pl-2">
               <textarea className="w-full p-2 bg-transparent text-twitterWhite" style={{color:"#fff" , width:"100%" , border:"none"}}

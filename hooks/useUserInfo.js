@@ -2,9 +2,10 @@ import {useEffect,useState} from "react";
 import {useSession} from "next-auth/react";
 import {useRouter} from "next/router"
 
-export default function useUserInfo() {
+export default  function useUserInfo() {
 
     const {data:session,status}=useSession();
+    const [uid,setUid]=useState();
     const [userInfo,setUserInfo]=useState();
     const [infoStatus,setInfoStatus]=useState(false);
     const router=useRouter()
@@ -14,7 +15,7 @@ export default function useUserInfo() {
         if(status==="authenticated")
         {
             console.log(session)
-             fetch( `/api/users?id=${session.user.email}`).then(response=>{
+             await fetch( `/api/users?id=${session.user.email}`).then(response=>{
                 response.json().then(data=>{
                 setUserInfo(data);
                 setInfoStatus(true)
@@ -25,10 +26,29 @@ export default function useUserInfo() {
           router.push("/login")
         }
     }
-    useEffect(()=>{
+    useEffect( ()=>{
       console.log("ahhhh")
-      getUserInfo();
+      if(status==="loading")
+      // return ;
+      console.log("loading")
+      {
+
+      }
+      if(status==="authenticated")
+      {
+          // console.log(session)
+            fetch( `/api/users?id=${session.user.email}`).then(response=>{
+              response.json().then(data=>{
+              setUserInfo(data);
+              setUid(data._id)
+              setInfoStatus(true);
+              })
+          })
+      }
+      else{
+        router.push("/login")
+      }
     },[status])
 
-  return {userInfo,setUserInfo,infoStatus};
+  return {userInfo,setUserInfo,infoStatus,uid};
 }

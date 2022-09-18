@@ -43,9 +43,9 @@ export default function postPage() {
           {post.parent && (
             <div className="pb-1">
               <PostContent {...post.parent} />
-              <div className="ml-5 h-12 relative">
+              <div className="ml-5 h-12 relative" style={{position:"relative",height:"50px",marginLeft:"10px"}}>
                 <div className="h-20 border-l-2 border-twitterBorder absolute -top-5"
-                     style={{marginLeft:'2px'}}></div>
+                     style={{marginLeft:'2px',height:"60px",borderLeft:"2px solid #2f3336 " ,position:"absolute",top:"-5px"}}></div>
               </div>
             </div>
           )}

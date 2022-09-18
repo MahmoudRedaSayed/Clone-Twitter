@@ -23,6 +23,7 @@ export default function UserPage() {
     if (!username) {
       return;
     }
+    console.log("username ",username)
     axios.get('/api/users?username='+username)
       .then(response => {
         setProfileInfo(response.data);
